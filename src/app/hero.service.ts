@@ -18,6 +18,13 @@ export class HeroService {
 
   constructor(private http: HttpClient, private messageService: MessageService) { }
 
+  addHero(hero: Hero): Observable<Hero> {
+    return this.http.post<Hero>(this.heroesUrl, hero, this.httpOptions).pipe(
+      tap((newHero: Hero) => this.log(`added hero with id=${hero.id}`)),
+      catchError(this.handleError<Hero>('addHero'))
+    );
+  }
+
   getHero(id: number): Observable<Hero> {
     const url = `${this.heroesUrl}/${id}`;
     return this.http.get<Hero>(url).pipe(
